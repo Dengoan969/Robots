@@ -19,6 +19,9 @@ public class MainApplicationFrame extends JFrame
     private final JDesktopPane desktopPane = new JDesktopPane();
     
     public MainApplicationFrame() {
+        UIManager.put("OptionPane.yesButtonText", "Да");
+        UIManager.put("OptionPane.noButtonText", "Нет");
+
         //Make the big window be indented 50 pixels from each edge
         //of the screen.
         int inset = 50;        
@@ -90,6 +93,17 @@ public class MainApplicationFrame extends JFrame
     private JMenuBar generateMenuBar()
     {
         JMenuBar menuBar = new JMenuBar();
+
+        JMenu appMenu = new JMenu("Приложение");
+        appMenu.setMnemonic(KeyEvent.VK_V);
+        appMenu.getAccessibleContext().setAccessibleDescription(
+                "Управление приложением");
+
+        {
+            JMenuItem exit = new JMenuItem("Выход", KeyEvent.VK_E);
+            exit.addActionListener(_ -> confirmExit());
+            appMenu.add(exit);
+        }
         
         JMenu lookAndFeelMenu = new JMenu("Режим отображения");
         lookAndFeelMenu.setMnemonic(KeyEvent.VK_V);
@@ -127,9 +141,19 @@ public class MainApplicationFrame extends JFrame
             testMenu.add(addLogMessageItem);
         }
 
+        menuBar.add(appMenu);
         menuBar.add(lookAndFeelMenu);
         menuBar.add(testMenu);
         return menuBar;
+    }
+
+    private void confirmExit() {
+        var result = JOptionPane.showConfirmDialog(this,
+                "Вы хотите выйти из приложения?",
+                "Подтверждение выхода", JOptionPane.YES_NO_OPTION);
+
+        if (result == JOptionPane.YES_OPTION)
+            System.exit(0);
     }
     
     private void setLookAndFeel(String className)
