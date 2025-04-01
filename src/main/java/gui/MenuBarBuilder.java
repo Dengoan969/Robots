@@ -79,7 +79,10 @@ public class MenuBarBuilder {
                 "Подтверждение выхода", JOptionPane.YES_NO_OPTION);
 
         if (result == JOptionPane.YES_OPTION)
+        {
             System.exit(0);
+        }
+
     }
 
     private void setLookAndFeel(String className) {
@@ -88,7 +91,7 @@ public class MenuBarBuilder {
             SwingUtilities.updateComponentTreeUI(frame);
         } catch (ClassNotFoundException | InstantiationException
                  | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            System.out.println(e.getMessage());
+            Logger.error("Error while change LookAndFeel:\n" + e.getMessage());
         }
     }
 }
