@@ -21,12 +21,6 @@ public class MainApplicationFrame extends JFrame
     public MainApplicationFrame() {
         UIManager.put("OptionPane.yesButtonText", "Да");
         UIManager.put("OptionPane.noButtonText", "Нет");
-        UIManager.put("InternalFrameTitlePane.minimizeButtonText", "Свернуть");
-        UIManager.put("InternalFrameTitlePane.closeButtonText", "Закрыть");
-        UIManager.put("InternalFrameTitlePane.maximizeButtonText", "Во весь экран");
-        UIManager.put("InternalFrameTitlePane.moveButtonText", "Переместить");
-        UIManager.put("InternalFrameTitlePane.sizeButtonText", "Размер");
-        UIManager.put("InternalFrameTitlePane.restoreButtonText", "Сбросить");
 
         //Make the big window be indented 50 pixels from each edge
         //of the screen.
