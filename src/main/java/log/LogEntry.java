@@ -1,8 +1,8 @@
 package log;
 
 public class LogEntry {
-    private LogLevel m_logLevel;
-    private String m_strMessage;
+    private final LogLevel m_logLevel;
+    private final String m_strMessage;
 
     public LogEntry(LogLevel logLevel, String strMessage) {
         m_strMessage = strMessage;

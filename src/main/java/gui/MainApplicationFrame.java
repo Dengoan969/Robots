@@ -66,13 +66,10 @@ public class MainApplicationFrame extends JFrame {
 
     private void saveWindowsState() {
         var windowsState = new WindowsState();
+
         for (var frame : desktopPane.getAllFrames()) {
             var title = frame.getTitle();
-            var state = new WindowState(
-                    frame.getX(),
-                    frame.getY(),
-                    frame.isIcon()
-            );
+            var state = new WindowState(frame.getX(), frame.getY(), frame.isIcon());
             windowsState.getWindows().put(title, state);
         }
         stateManager.setState(windowsState);
@@ -80,9 +77,10 @@ public class MainApplicationFrame extends JFrame {
 
     private void loadWindowsState() {
         var windowsState = stateManager.getState();
-        if (windowsState == null || windowsState.getWindows() == null || windowsState.getWindows().isEmpty()) {
+        if (windowsState.getWindows().isEmpty()) {
             return;
         }
+
         for (var frame : desktopPane.getAllFrames()) {
             var title = frame.getTitle();
             if (windowsState.getWindows().containsKey(title)) {

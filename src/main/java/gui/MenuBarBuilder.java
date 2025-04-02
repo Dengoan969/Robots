@@ -78,8 +78,7 @@ public class MenuBarBuilder {
                 "Вы хотите выйти из приложения?",
                 "Подтверждение выхода", JOptionPane.YES_NO_OPTION);
 
-        if (result == JOptionPane.YES_OPTION)
-        {
+        if (result == JOptionPane.YES_OPTION) {
             System.exit(0);
         }
 

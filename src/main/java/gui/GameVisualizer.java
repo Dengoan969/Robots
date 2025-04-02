@@ -16,6 +16,7 @@ public class GameVisualizer extends JPanel {
     private volatile double m_robotDirection = 0;
     private volatile int m_targetPositionX = 150;
     private volatile int m_targetPositionY = 100;
+
     public GameVisualizer() {
         var timer = initTimer();
         timer.schedule(new TimerTask() {

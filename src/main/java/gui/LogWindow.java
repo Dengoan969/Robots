@@ -23,7 +23,6 @@ public class LogWindow extends JInternalFrame implements LogChangeListener {
 
         pack();
         updateLogContent();
-        setLocation(10, 10);
         setSize(width, height);
     }
 

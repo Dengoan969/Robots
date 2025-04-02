@@ -5,7 +5,8 @@ public class WindowState {
     private int y;
     private boolean icon;
 
-    public WindowState() {}
+    public WindowState() {
+    }
 
     public WindowState(int x, int y, boolean icon) {
         this.x = x;
