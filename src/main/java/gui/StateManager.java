@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class StateManager {
-    private static final String APP_STATE_FILE = "appState.yaml";
+    private static final String APP_STATE_FILE = "windowsState.yaml";
 
     private final ObjectMapper mapper = new ObjectMapper(new YAMLFactory()
             .disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER));
