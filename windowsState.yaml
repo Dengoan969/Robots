@@ -1,9 +1,10 @@
-windows:
-  Игровое поле:
-    x: 465
-    "y": 195
+---
+windowsStates:
+  LogWindow-0:
+    x: 143
+    "y": 160
     icon: false
-  Протокол работы:
-    x: 0
-    "y": 0
+  GameWindow-0:
+    x: 905
+    "y": 193
     icon: false

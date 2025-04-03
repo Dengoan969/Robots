@@ -1,5 +1,10 @@
 package gui;
 
+import gui.helpers.MenuBarBuilder;
+import gui.state.StateManager;
+import gui.state.StatefulRegistry;
+import gui.state.WindowState;
+import gui.state.WindowsState;
 import log.Logger;
 
 import javax.swing.*;
@@ -10,6 +15,7 @@ import java.beans.PropertyVetoException;
 public class MainApplicationFrame extends JFrame {
     private final JDesktopPane desktopPane = new JDesktopPane();
     private final StateManager stateManager = new StateManager();
+    private final StatefulRegistry statefulRegistry = new StatefulRegistry();
 
     public MainApplicationFrame() {
         setContentPane(desktopPane);
@@ -49,6 +55,8 @@ public class MainApplicationFrame extends JFrame {
     protected void addWindow(JInternalFrame frame) {
         desktopPane.add(frame);
         frame.setVisible(true);
+
+        statefulRegistry.registerIfStateful(frame);
     }
 
     private void addTranslatedText() {
@@ -67,24 +75,28 @@ public class MainApplicationFrame extends JFrame {
     private void saveWindowsState() {
         var windowsState = new WindowsState();
 
-        for (var frame : desktopPane.getAllFrames()) {
-            var title = frame.getTitle();
+        for (var entry : statefulRegistry.getStatefulWindows().entrySet()) {
+            var id = entry.getKey();
+            var frame = (JInternalFrame) entry.getValue();
+
             var state = new WindowState(frame.getX(), frame.getY(), frame.isIcon());
-            windowsState.getWindows().put(title, state);
+            windowsState.getWindowsStates().put(id, state);
         }
         stateManager.setState(windowsState);
     }
 
     private void loadWindowsState() {
         var windowsState = stateManager.getState();
-        if (windowsState.getWindows().isEmpty()) {
+        if (windowsState.getWindowsStates().isEmpty()) {
             return;
         }
 
-        for (var frame : desktopPane.getAllFrames()) {
-            var title = frame.getTitle();
-            if (windowsState.getWindows().containsKey(title)) {
-                var state = windowsState.getWindows().get(title);
+        for (var entry : statefulRegistry.getStatefulWindows().entrySet()) {
+            var id = entry.getKey();
+            var frame = (JInternalFrame) entry.getValue();
+
+            if (windowsState.getWindowsStates().containsKey(id)) {
+                var state = windowsState.getWindowsStates().get(id);
                 frame.setLocation(state.getX(), state.getY());
                 try {
                     frame.setIcon(state.getIcon());

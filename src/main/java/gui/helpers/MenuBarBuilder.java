@@ -1,4 +1,4 @@
-package gui;
+package gui.helpers;
 
 import log.Logger;
 

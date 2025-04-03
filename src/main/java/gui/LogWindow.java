@@ -1,12 +1,13 @@
 package gui;
 
+import gui.state.Stateful;
 import log.LogChangeListener;
 import log.LogWindowSource;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class LogWindow extends JInternalFrame implements LogChangeListener {
+public class LogWindow extends JInternalFrame implements LogChangeListener, Stateful {
     private final LogWindowSource logSource;
     private final TextArea logContent;
 
@@ -38,5 +39,10 @@ public class LogWindow extends JInternalFrame implements LogChangeListener {
     @Override
     public void onLogChanged() {
         EventQueue.invokeLater(this::updateLogContent);
+    }
+
+    @Override
+    public String getName() {
+        return "LogWindow";
     }
 }

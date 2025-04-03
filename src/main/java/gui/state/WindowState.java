@@ -1,4 +1,4 @@
-package gui;
+package gui.state;
 
 public class WindowState {
     private int x;
