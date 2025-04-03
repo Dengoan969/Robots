@@ -1,20 +1,25 @@
 package gui;
 
-import java.awt.BorderLayout;
+import gui.state.Stateful;
 
-import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
 
-public class GameWindow extends JInternalFrame
-{
-    private final GameVisualizer m_visualizer;
-    public GameWindow() 
-    {
+public class GameWindow extends JInternalFrame implements Stateful {
+
+    public GameWindow(int width, int height) {
         super("Игровое поле", true, true, true, true);
-        m_visualizer = new GameVisualizer();
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.add(m_visualizer, BorderLayout.CENTER);
+
+        var visualizer = new GameVisualizer();
+        var panel = new JPanel(new BorderLayout());
+        panel.add(visualizer, BorderLayout.CENTER);
         getContentPane().add(panel);
         pack();
+        setSize(width, height);
+    }
+
+    @Override
+    public String getName() {
+        return "GameWindow";
     }
 }
