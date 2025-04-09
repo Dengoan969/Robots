@@ -1,50 +1,48 @@
 package gui;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.awt.TextArea;
-
-import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
-
+import gui.state.Stateful;
 import log.LogChangeListener;
-import log.LogEntry;
 import log.LogWindowSource;
 
-public class LogWindow extends JInternalFrame implements LogChangeListener
-{
-    private LogWindowSource m_logSource;
-    private TextArea m_logContent;
+import javax.swing.*;
+import java.awt.*;
 
-    public LogWindow(LogWindowSource logSource) 
-    {
+public class LogWindow extends JInternalFrame implements LogChangeListener, Stateful {
+    private final LogWindowSource logSource;
+    private final TextArea logContent;
+
+    public LogWindow(int width, int height, LogWindowSource logSource) {
         super("Протокол работы", true, true, true, true);
-        m_logSource = logSource;
-        m_logSource.registerListener(this);
-        m_logContent = new TextArea("");
-        m_logContent.setSize(200, 500);
-        
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.add(m_logContent, BorderLayout.CENTER);
+        this.logSource = logSource;
+        this.logSource.registerListener(this);
+        logContent = new TextArea("");
+        logContent.setSize(200, 500);
+
+        var panel = new JPanel(new BorderLayout());
+        panel.add(logContent, BorderLayout.CENTER);
         getContentPane().add(panel);
+
         pack();
         updateLogContent();
+        setSize(width, height);
     }
 
-    private void updateLogContent()
-    {
-        StringBuilder content = new StringBuilder();
-        for (LogEntry entry : m_logSource.all())
-        {
+    private void updateLogContent() {
+        var content = new StringBuilder();
+        for (var entry : logSource.all()) {
             content.append(entry.getMessage()).append("\n");
         }
-        m_logContent.setText(content.toString());
-        m_logContent.invalidate();
+        logContent.setText(content.toString());
+        logContent.invalidate();
     }
-    
+
     @Override
-    public void onLogChanged()
-    {
+    public void onLogChanged() {
         EventQueue.invokeLater(this::updateLogContent);
+    }
+
+    @Override
+    public String getName() {
+        return "LogWindow";
     }
 }
