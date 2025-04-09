@@ -63,7 +63,7 @@ public class LogWindowSource {
         if (startFrom < 0 || startFrom >= size()) {
             return Collections.emptyList();
         }
-        return messages.range(startFrom, Math.min(count, size() - startFrom));
+        return messages.range(startFrom, count);
     }
 
     public Iterable<LogEntry> all() {
