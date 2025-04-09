@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class StateManager {
-    private static final String APP_STATE_FILE = "windowsState.yaml";
+    private static final String APP_STATE_FILE = System.getProperty("user.home") + File.separator + "windowsState.yaml";
 
     private final ObjectMapper mapper = new YAMLMapper();
 

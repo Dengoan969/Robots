@@ -32,8 +32,8 @@ public class StatefulRegistry {
     }
 
     private boolean isStateful(JInternalFrame frame) {
-        for (var _interface : frame.getClass().getInterfaces())
-            if (_interface == Stateful.class)
+        for (var implementedInterface : frame.getClass().getInterfaces())
+            if (implementedInterface == Stateful.class)
                 return true;
 
         return false;
