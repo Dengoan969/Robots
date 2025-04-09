@@ -94,12 +94,14 @@ public class MessagesQueue {
                 }
 
                 var actualIndex = (head + currentIndex) % capacity;
-                var element = buffer[actualIndex];
+                var nextElement = buffer[actualIndex];
 
                 currentIndex++;
+
                 if (takeCount != null)
                     takeCount--;
-                return element;
+
+                return nextElement;
             } finally {
                 lock.readLock().unlock();
             }
