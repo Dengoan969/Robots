@@ -1,5 +1,8 @@
 package gui;
 
+import gui.game.GameWindow;
+import gui.game.Robot;
+import gui.game.RobotCoordinatesWindow;
 import gui.helpers.MenuBarBuilder;
 import gui.state.StateManager;
 import gui.state.StatefulRegistry;
@@ -22,7 +25,10 @@ public class MainApplicationFrame extends JFrame {
         addTranslatedText();
 
         addLogWindow();
-        addGameWindow();
+
+        var robot = new Robot();
+        addGameWindow(robot);
+        addRobotCoordinatesWindow(robot);
 
         loadWindowsState();
 
@@ -46,10 +52,18 @@ public class MainApplicationFrame extends JFrame {
         addWindow(logWindow);
     }
 
-    private void addGameWindow() {
-        var gameWindow = new GameWindow(400, 400);
+    private void addGameWindow(Robot robot) {
+        var gameWindow = new GameWindow(400, 400, robot);
 
         addWindow(gameWindow);
+    }
+
+
+    private void addRobotCoordinatesWindow(Robot robot) {
+        var coordinatesWindow = new RobotCoordinatesWindow(250, 100);
+        robot.addObserver(coordinatesWindow);
+
+        addWindow(coordinatesWindow);
     }
 
     protected void addWindow(JInternalFrame frame) {
