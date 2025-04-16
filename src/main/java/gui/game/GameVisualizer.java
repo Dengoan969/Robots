@@ -73,21 +73,18 @@ public class GameVisualizer extends JPanel {
         super.paint(g);
         var g2d = (Graphics2D) g;
 
+        drawRobot(g2d);
+        drawTarget(g2d, targetPositionX, targetPositionY);
+    }
+
+    private void drawRobot(Graphics2D g) {
         var robotX = robot.getX();
         var robotY = robot.getY();
         var robotDirection = robot.getDirection();
 
-        drawRobot(g2d, round(robotX), round(robotY), robotDirection);
-        drawTarget(g2d, targetPositionX, targetPositionY);
-    }
-
-    private void drawRobot(Graphics2D g, int x, int y, double direction) {
-        var robotX = robot.getX();
-        var robotY = robot.getY();
-
         var robotCenterX = round(robotX);
         var robotCenterY = round(robotY);
-        var t = AffineTransform.getRotateInstance(direction, robotCenterX, robotCenterY);
+        var t = AffineTransform.getRotateInstance(robotDirection, robotCenterX, robotCenterY);
         g.setTransform(t);
         g.setColor(Color.MAGENTA);
         fillOval(g, robotCenterX, robotCenterY, 30, 10);
