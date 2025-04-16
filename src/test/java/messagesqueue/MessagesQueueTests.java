@@ -6,10 +6,14 @@ import log.MessagesQueue;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.NoSuchElementException;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MessagesQueueTests {
 
@@ -30,6 +34,42 @@ class MessagesQueueTests {
         queue.append(createLogEntry("Сообщение 4"));
 
         assertEquals(3, queue.size());
+    }
+
+    @Test
+    void shouldAppendConcurrent() throws InterruptedException {
+        var queue = new MessagesQueue(1000);
+        var threadsCount = 10;
+        var threads = new Thread[threadsCount];
+        var expected = new ConcurrentLinkedQueue<String>();
+
+        for (var i = 0; i < threadsCount; i++) {
+            var threadNum = i;
+            threads[i] = new Thread(() -> {
+                for (var j = 0; j < 80; j++) {
+                    var message = String.format("Сообщение %d - %d", threadNum, j);
+                    expected.add(message);
+                    queue.append(createLogEntry(message));
+                }
+            });
+
+            threads[i].start();
+        }
+
+        for (var thread : threads) {
+            thread.join();
+        }
+
+        assertEquals(expected.size(), queue.size());
+
+        var actual = new HashSet<String>();
+        for (var entry : queue.all()) {
+            actual.add(entry.getMessage());
+        }
+
+        for (var message : expected) {
+            assertTrue(actual.contains(message));
+        }
     }
 
     @Test
@@ -69,6 +109,49 @@ class MessagesQueueTests {
         assertEquals("Сообщение 2", result.get(0).getMessage());
         assertEquals("Сообщение 3", result.get(1).getMessage());
         assertEquals("Сообщение 4", result.get(2).getMessage());
+    }
+
+    @Test
+    void shouldConcurrentReturnRange() throws InterruptedException {
+        var queue = new MessagesQueue(1000);
+        var threadsCount = 10;
+        var threads = new Thread[threadsCount];
+        var expectedCount = new AtomicInteger(0);
+
+        for (var i = 0; i < threadsCount; i++) {
+            var threadNum = i;
+            threads[i] = new Thread(() -> {
+                for (var j = 0; j < 100; j++) {
+                    var message = String.format("Сообщение %d - %d", threadNum, j);
+                    queue.append(createLogEntry(message));
+                    expectedCount.incrementAndGet();
+                }
+            });
+            threads[i].start();
+        }
+
+        var allMessages = new ConcurrentLinkedQueue<String>();
+        var reader = new Thread(() -> {
+            while (expectedCount.get() < threadsCount * 100) {
+                for (var entry : queue.all()) {
+                    allMessages.add(entry.getMessage());
+                }
+            }
+        });
+        reader.start();
+
+        for (var thread : threads) {
+            thread.join();
+        }
+        reader.join();
+
+        assertEquals(expectedCount.get(), queue.size());
+
+        var readerMessages = new HashSet<>(allMessages);
+
+        for (var entry : queue.all()) {
+            assertTrue(readerMessages.contains(entry.getMessage()));
+        }
     }
 
     @Test
@@ -130,5 +213,49 @@ class MessagesQueueTests {
 
 
         assertThrows(NoSuchElementException.class, iterator::next);
+    }
+
+    @Test
+    void shouldConcurrentReturnAllElementsWhenAppend() throws InterruptedException {
+        var queue = new MessagesQueue(1000);
+        var threadsCount = 10;
+        var threads = new Thread[threadsCount];
+        var expectedCount = new AtomicInteger(0);
+
+        for (var i = 0; i < threadsCount; i++) {
+            var threadNum = i;
+            threads[i] = new Thread(() -> {
+                for (var j = 0; j < 100; j++) {
+                    var message = String.format("Сообщение %d - %d", threadNum, j);
+                    queue.append(createLogEntry(message));
+                    expectedCount.incrementAndGet();
+                }
+            });
+            threads[i].start();
+        }
+
+        var allMessages = new ConcurrentLinkedQueue<String>();
+
+        var reader = new Thread(() -> {
+            while (expectedCount.get() < threadsCount * 100) {
+                for (var entry : queue.all()) {
+                    allMessages.add(entry.getMessage());
+                }
+            }
+        });
+        reader.start();
+
+        for (var thread : threads) {
+            thread.join();
+        }
+        reader.join();
+
+        assertEquals(expectedCount.get(), queue.size());
+
+        var readerMessages = new HashSet<>(allMessages);
+
+        for (var entry : queue.all()) {
+            assertTrue(readerMessages.contains(entry.getMessage()));
+        }
     }
 }
