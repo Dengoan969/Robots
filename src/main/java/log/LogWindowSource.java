@@ -1,7 +1,6 @@
 package log;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class LogWindowSource {
     private final MessagesQueue messages;
@@ -53,17 +52,6 @@ public class LogWindowSource {
             }
         }
         return result;
-    }
-
-    public int size() {
-        return messages.size();
-    }
-
-    public Iterable<LogEntry> range(int startFrom, int count) {
-        if (startFrom < 0 || startFrom >= size()) {
-            return Collections.emptyList();
-        }
-        return messages.range(startFrom, count);
     }
 
     public Iterable<LogEntry> all() {

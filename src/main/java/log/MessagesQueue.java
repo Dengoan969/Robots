@@ -16,6 +16,11 @@ public class MessagesQueue {
 
 
     public MessagesQueue(int capacity) {
+
+        if (capacity <= 0) {
+            throw new IllegalArgumentException("capacity must be positive");
+        }
+
         this.capacity = capacity;
         this.buffer = new LogEntry[capacity];
     }
@@ -58,7 +63,7 @@ public class MessagesQueue {
         private int currentIndex;
         private Integer takeCount;
 
-        public LogIterator(int startFrom, Integer count) {
+        private LogIterator(int startFrom, Integer count) {
             lock.readLock().lock();
             try {
                 this.previousHead = head;
